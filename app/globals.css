@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #000;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-feature-settings: "cv11", "ss01", "ss03";
+}
+
+::selection {
+  background: #fff;
+  color: #000;
+}
+
+/* Headline fill: white fading to grey, the way Linear sets its display type */
+.text-fade {
+  background: linear-gradient(180deg, #fff 35%, rgba(255, 255, 255, 0.55));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* The flame dot in the wordmark: the only colour on the site, and only in the logo */
+.wick-flame {
+  background: radial-gradient(circle at 45% 40%, #fff8dc 0%, #ffd27a 35%, #ff9d2e 75%, #f07a12 100%);
+  box-shadow:
+    0 0 0.12em rgba(255, 196, 92, 0.95),
+    0 0 0.45em rgba(255, 150, 40, 0.55),
+    0 0 1.6em rgba(255, 120, 20, 0.3);
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Above-the-fold entrance: pure CSS so it never waits on hydration */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+.fade-up {
+  animation: fade-up 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Voice waveform */
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+@layer components {
+  .wave > i {
+    display: block;
+    width: 2px;
+    height: 100%;
+    border-radius: 2px;
+    background: currentColor;
+    transform: scaleY(0.25);
+  }
+}
+.wave.on > i {
+  animation: wave 1s ease-in-out infinite;
+}
+.wave > i:nth-child(2) { animation-delay: -0.2s; }
+.wave > i:nth-child(3) { animation-delay: -0.45s; }
+.wave > i:nth-child(4) { animation-delay: -0.1s; }
+.wave > i:nth-child(5) { animation-delay: -0.6s; }
+.wave > i:nth-child(6) { animation-delay: -0.3s; }
+.wave > i:nth-child(7) { animation-delay: -0.75s; }
+
+/* Live dot */
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.live-dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #fff;
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #fff;
+  animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Camera reticle */
+.reticle {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  transition:
+    left 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    top 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.3s;
+}
+.reticle > .c {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  transition: border-color 0.3s;
+}
+.reticle > .tl { left: 0; top: 0; border-right: 0; border-bottom: 0; }
+.reticle > .tr { right: 0; top: 0; border-left: 0; border-bottom: 0; }
+.reticle > .bl { left: 0; bottom: 0; border-right: 0; border-top: 0; }
+.reticle > .br { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+.reticle.lock > .c {
+  border-color: #fff;
+}
+.reticle.lock::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.06);
+  outline: 1px solid rgba(255, 255, 255, 0.18);
+}
+.reticle > .tag {
+  position: absolute;
+  left: 0;
+  top: -26px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.3s 0.15s,
+    transform 0.3s 0.15s;
+}
+.reticle.lock > .tag {
+  opacity: 1;
+  transform: none;
+}
+.reticle.off {
+  opacity: 0;
+}
+
+/* Dot-grid texture for small illustrations */
+.dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
